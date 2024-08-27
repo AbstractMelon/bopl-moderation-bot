@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Partials  } = require('discord.js');
 const fs = require('fs');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -17,7 +17,16 @@ try {
             GatewayIntentBits.GuildMessages, 
             GatewayIntentBits.MessageContent,
             GatewayIntentBits.GuildModeration,
-        ] 
+            GatewayIntentBits.DirectMessages,
+            GatewayIntentBits.GuildMessageReactions
+        ],
+        partials: [
+            Partials.Channel,
+            Partials.GuildMember,
+            Partials.Message,
+            Partials.Reaction,
+            Partials.User,
+        ]
     });
 } catch (error) {
     console.error('Failed to create Discord client', error);
@@ -25,6 +34,8 @@ try {
 
 client.commands = new Collection();
 
+
+// Had to make this for some reason?
 let commandFiles;
 try {
     const commandsPath = path.resolve(__dirname, 'commands');
@@ -71,14 +82,18 @@ if (eventFiles) {
     }
 }
 
+// Load automod, template is:
+// require('./modules/filename')(client); 
 try {
-    require('./modules/automod')(client); 
+    // require('./modules/automod')(client); 
 } catch (error) {
     console.error('Failed to load automod module', error);
 }
 
-client.once('ready', () => {
-    console.log('Ready!');
+// Start bot
+client.on("ready", () => {
+    console.log(`Logged in as ${client.user.tag}`);
+    console.log("Bot loaded!")
 });
 
 try {
