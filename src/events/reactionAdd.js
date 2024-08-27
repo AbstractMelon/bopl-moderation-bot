@@ -64,7 +64,7 @@ module.exports = (client) => {
         const checkReaction = message.reactions.cache.get('✅')?.count || 0;
         const eyesReaction = message.reactions.cache.get('👀')?.count || 0;
 
-        const reactionCount = xReaction - (upVoteReaction + checkReaction + eyesReaction);
+        const reactionCount = xReaction - (upVoteReaction); // + checkReaction + eyesReaction);
         console.log(`Calculated reaction score: ${reactionCount} (❌: ${xReaction}, 👍: ${upVoteReaction}, ✅: ${checkReaction}, 👀: ${eyesReaction})`);
 
         // If the post has reached the threshold, close the thread
